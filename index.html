@@ -6,10 +6,18 @@
 
 <body>
     <div id="providedWord" style="position: absolute;
-            z-index: 9;
-            font-size: 40px;
-            border: 1px solid #d3d3d3;
-            text-align: center;background-color:lightblue">Place Holder for word</div>
+                z-index: 9;
+                font-size: 40px;
+                border: 1px solid #d3d3d3;
+                left: 600px;
+                text-align: center;background-color:lightblue">Guessing words
+        </div>
+    <div>
+        Guess word: <input id="inputfield" type="text" placeholder="Write something" /> </br>
+        <div class="wordchoicediv">Words choice: <input id="wordchoice" type="text" placeholder="Write something" /></br></div>
+        <button class="wordchoicediv" onclick="setupGame($('#wordchoice').val())">Start</button>
+        <button onclick="setupGame()">Restart</button>
+    </div>
     <div id="gamepage">
 
     </div>
@@ -24,6 +32,11 @@
     function setupGame(wordList = null) {
         $html = '';
         words = (wordList) ? wordList.split(',') : [];
+        if(words.length > 0){
+            $('#wordchoicediv').hide();
+        }else{
+            $('#wordchoicediv').show();
+        }
         words.forEach((word) => {
             $html += `<div class="wordbox" style="left: ${getRandomIntLeft()}px; font-size: 30px; bottom: ${getRandomIntBottom()}px; height: 40px; position: relative;">${word}</div>`;
         })
@@ -33,6 +46,11 @@
         $('.wordbox').click(() => {
             $('#providedWord').append("<div class='circle'></div>")
         })
+        $('#inputfield').on( 'keyup', function ( evt ) {
+            evt.stopPropagation();
+            $('#providedWord').html(this.value)
+        });
+        
     };
     setupGame()
 
@@ -77,6 +95,7 @@
             document.onmousemove = null;
         }
     }
+    
     function guessword(word) {
         $('#providedWord').html(word)
     }
@@ -90,6 +109,12 @@
         `)
     }
 
+    $(document).ready(function() {
+        $('#inputfield').on( 'keydown', function ( evt ) {
+            evt.stopPropagation();
+        console.log( 'input got keydown' );
+    } );
+    })
 
 
 </script>
