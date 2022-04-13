@@ -1,0 +1,183 @@
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="providedWord" style="position: absolute;
+                z-index: 9;
+                font-size: 40px;
+                border: 1px solid #d3d3d3;
+                left: 600px;
+                text-align: center;background-color:lightblue">Guessing words
+    </div>
+    <div>
+        Guess word: <input id="inputfield" type="text" placeholder="Write something" /> </br>
+        <div class="wordchoicediv">Words choice: <input id="wordchoice" type="text"
+                placeholder="Write something" /></br></div>
+        <button class="wordchoicediv" onclick="setupGame($('#wordchoice').val())">Start</button>
+        <button onclick="setupGame()">Restart</button>
+    </div>
+    <div id="gamepage" style="width: 1700px;
+    height: 850px;
+    position: relative;">
+
+    </div>
+</body>
+<script>
+    var padding = 12;
+    var xlocation = [];
+    var ylocation = [];
+    function shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+
+        // While there remain elements to shuffle.
+        while (currentIndex != 0) {
+
+            // Pick a remaining element.
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+
+            // And swap it with the current element.
+            [array[currentIndex], array[randomIndex]] = [
+                array[randomIndex], array[currentIndex]];
+        }
+
+        return array;
+    }
+
+    function checkSurroundRadius(point, location){
+        for(var i = point; i<point+padding; i++){
+            console.log("x :",point, location, location.includes(i));
+            if (location.includes(i)){
+                return true
+            }
+        }
+        for(var i = point; point-padding<i; i--){
+            console.log("-x :",point, location, location.includes(i));
+            if (location.includes(i)){
+                return true
+            }
+        }
+        return false
+    }
+
+    function getRandomIntLeft() {
+        left = Math.floor(Math.random() * 1700);
+        console.log("checking Left ", left);
+        while(checkSurroundRadius(left, xlocation)){
+            
+            left = Math.floor(Math.random() * 1700);
+            console.log("checking Left ", left)
+        }
+        xlocation.push(left);
+        return left;
+    }
+    
+    function getRandomIntTop() {
+        y = Math.floor(Math.random() * 850);
+        console.log("checking Top ", y);
+        while(checkSurroundRadius(y, ylocation)){
+            
+            y = Math.floor(Math.random() * 850);
+            console.log("checking Top ", y)
+        }
+        ylocation.push(y);
+        return y;
+    }
+
+    function setupGame(wordList = null) {
+        xlocation = [];
+        ylocation = [];
+        $html = '';
+        words = (wordList) ? shuffle(wordList.split(',')) : [];
+        if (words.length > 0) {
+            $('#wordchoicediv').hide();
+        } else {
+            $('#wordchoicediv').show();
+        }
+        words.forEach((word) => {
+            $html += `<div class="wordbox" style="left: ${getRandomIntLeft()}px; font-size: 30px; top: ${getRandomIntTop()}px; height: 40px; width: 100px; position:absolute;
+    text-align: center;">${word}</div>`;
+        })
+
+        $('#gamepage').html($html)
+
+        $('.wordbox').click(() => {
+            $('#providedWord').append("<div class='circle'></div>")
+        })
+        $('#inputfield').on('keyup', function (evt) {
+            evt.stopPropagation();
+            $('#providedWord').html(this.value)
+        });
+
+    };
+    setupGame()
+
+    dragElement(document.getElementById("providedWord"));
+    function dragElement(elmnt) {
+        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        if (document.getElementById(elmnt.id + "header")) {
+            // if present, the header is where you move the DIV from:
+            document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+        } else {
+            // otherwise, move the DIV from anywhere inside the DIV:
+            elmnt.onmousedown = dragMouseDown;
+        }
+
+        function dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // get the mouse cursor position at startup:
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            // call a function whenever the cursor moves:
+            document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // calculate the new cursor position:
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            // set the element's new position:
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        }
+
+        function closeDragElement() {
+            // stop moving when mouse button is released:
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+    }
+
+    function guessword(word) {
+        $('#providedWord').html(word)
+    }
+
+    function help() {
+        console.log(`
+            1) Start the game 
+                cmd: setupGame('谢谢,学校,教室,学生,老师,课本,作业,测验,考试,历史学,地理学')
+            2) Provide guess word
+                cmd: guessword('xi huan')
+        `)
+    }
+
+    $(document).ready(function () {
+        $('#inputfield').on('keydown', function (evt) {
+            evt.stopPropagation();
+            console.log('input got keydown');
+        });
+    })
+
+
+</script>
+
+</html
