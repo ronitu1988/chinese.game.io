@@ -11,34 +11,55 @@
                 border: 1px solid #d3d3d3;
                 left: 600px;
                 text-align: center;background-color:lightblue">Guessing words
-        </div>
+    </div>
     <div>
         Guess word: <input id="inputfield" type="text" placeholder="Write something" /> </br>
-        <div class="wordchoicediv">Words choice: <input id="wordchoice" type="text" placeholder="Write something" /></br></div>
+        <div class="wordchoicediv">Words choice: <input id="wordchoice" type="text"
+                placeholder="Write something" /></br></div>
         <button class="wordchoicediv" onclick="setupGame($('#wordchoice').val())">Start</button>
         <button onclick="setupGame()">Restart</button>
     </div>
-    <div id="gamepage">
+    <div id="gamepage" style="width: 1700px;
+    height: 850px;
+    position: relative;">
 
     </div>
 </body>
 <script>
+    function shuffle(array) {
+        let currentIndex = array.length, randomIndex;
+
+        // While there remain elements to shuffle.
+        while (currentIndex != 0) {
+
+            // Pick a remaining element.
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex--;
+
+            // And swap it with the current element.
+            [array[currentIndex], array[randomIndex]] = [
+                array[randomIndex], array[currentIndex]];
+        }
+
+        return array;
+    }
     function getRandomIntLeft() {
-        return Math.floor(Math.random() * 1500);
+        return Math.floor(Math.random() * 1700);
     }
     function getRandomIntBottom() {
-        return Math.floor(Math.random() * -600);
+        return Math.floor(Math.random() * 850);
     }
     function setupGame(wordList = null) {
         $html = '';
-        words = (wordList) ? wordList.split(',') : [];
-        if(words.length > 0){
+        words = (wordList) ? shuffle(wordList.split(',')) : [];
+        if (words.length > 0) {
             $('#wordchoicediv').hide();
-        }else{
+        } else {
             $('#wordchoicediv').show();
         }
         words.forEach((word) => {
-            $html += `<div class="wordbox" style="left: ${getRandomIntLeft()}px; font-size: 30px; bottom: ${getRandomIntBottom()}px; height: 40px; position: relative;">${word}</div>`;
+            $html += `<div class="wordbox" style="left: ${getRandomIntLeft()}px; font-size: 30px; top: ${getRandomIntBottom()}px; height: 40px; width: 100px; position:absolute;
+    text-align: center;">${word}</div>`;
         })
 
         $('#gamepage').html($html)
@@ -46,11 +67,11 @@
         $('.wordbox').click(() => {
             $('#providedWord').append("<div class='circle'></div>")
         })
-        $('#inputfield').on( 'keyup', function ( evt ) {
+        $('#inputfield').on('keyup', function (evt) {
             evt.stopPropagation();
             $('#providedWord').html(this.value)
         });
-        
+
     };
     setupGame()
 
@@ -95,7 +116,7 @@
             document.onmousemove = null;
         }
     }
-    
+
     function guessword(word) {
         $('#providedWord').html(word)
     }
@@ -109,11 +130,11 @@
         `)
     }
 
-    $(document).ready(function() {
-        $('#inputfield').on( 'keydown', function ( evt ) {
+    $(document).ready(function () {
+        $('#inputfield').on('keydown', function (evt) {
             evt.stopPropagation();
-        console.log( 'input got keydown' );
-    } );
+            console.log('input got keydown');
+        });
     })
 
 
