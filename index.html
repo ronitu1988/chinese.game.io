@@ -6,11 +6,11 @@
 
 <body>
     <div id="providedWord" style="position: absolute;
-                z-index: 9;
-                font-size: 40px;
-                border: 1px solid #d3d3d3;
-                left: 600px;
-                text-align: center;background-color:lightblue">Guessing words
+        z-index: 9;
+        font-size: 40px;
+        border: 1px solid #d3d3d3;
+        left: 600px;
+        text-align: center;background-color:lightblue">Guessing words
     </div>
     <div>
         Guess word: <input id="inputfield" type="text" placeholder="Write something" /> </br>
@@ -19,13 +19,14 @@
         <button class="wordchoicediv" onclick="setupGame($('#wordchoice').val())">Start</button>
         <button onclick="setupGame()">Restart</button>
     </div>
-    <div id="gamepage" style="width: 1700px;
-    height: 850px;
-    position: relative;">
+    <div id="gamepage" style="position: relative;">
 
     </div>
 </body>
 <script>
+    var pageMaxWidth = $(window).width();
+    var pageMaxHeight = $(window).height();
+
     function shuffle(array) {
         let currentIndex = array.length, randomIndex;
 
@@ -44,13 +45,14 @@
         return array;
     }
     function getRandomIntLeft() {
-        return Math.floor(Math.random() * 1700);
+        return Math.floor(Math.random() * pageMaxWidth);
     }
     function getRandomIntBottom() {
-        return Math.floor(Math.random() * 850);
+        return Math.floor(Math.random() * pageMaxHeight);
     }
     function setupGame(wordList = null) {
         $html = '';
+        $('#gamepage').css("width", pageMaxWidth).css("height", pageMaxHeight);
         words = (wordList) ? shuffle(wordList.split(',')) : [];
         if (words.length > 0) {
             $('#wordchoicediv').hide();
